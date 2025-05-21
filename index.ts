@@ -57,27 +57,48 @@ const createTestConfig = async () => {
 
 async function setupPolicy(policyData: string): Promise<number> {
   // Create a new policy
-  const result = await RULES_ENGINE.createPolicy(policyData);
-  console.log(`Policy \'${result.policyId}\' created successfully.`);
-  return result.policyId;
+  try {
+    const result = await RULES_ENGINE.createPolicy(policyData);
+    console.log(`Policy \'${result.policyId}\' created successfully.`);
+    return result.policyId;
+  } catch (error) {
+    console.error(`Error creating policy: ${error}`);
+    throw error;
+  }
 }
 
-async function injectModifiers(policyJSONFile: string, modifierFileName: string, sourceContractFile: string) {
-  policyModifierGeneration(policyJSONFile, modifierFileName, [sourceContractFile]);
+async function injectModifiers(
+  policyJSONFile: string,
+  modifierFileName: string,
+  sourceContractFile: string
+) {
+  try {
+    policyModifierGeneration(policyJSONFile, modifierFileName, [sourceContractFile]);
+  } catch (error) {
+    console.error(`Error injecting modifiers: ${error}`);
+    throw error;
+  }
 }
 
 async function applyPolicy(policyId: number, callingContractAddress: Address) {
-  await validatePolicyId(policyId);
+  try {
+    await validatePolicyId(policyId);
 
-  // Apply the policy to the contract
-  await RULES_ENGINE.appendPolicy(policyId, callingContractAddress);
-  console.log("Policy applied!");
+    // Apply the policy to the contract
+    await RULES_ENGINE.appendPolicy(policyId, callingContractAddress);
+    console.log("Policy applied!");
+  } catch (error) {
+    console.error(`Error applying policy: ${error}`);
+    throw error;
+  }
 }
 
 async function validatePolicyId(policyId: number): Promise<boolean> {
   // Check if the policy ID is a valid number
   if (isNaN(policyId) || policyId <= 0) {
-    throw new Error(`Invalid policy ID: ${policyId}. The policy ID must be a number greater than 0.`);
+    throw new Error(
+      `Invalid policy ID: ${policyId}. The policy ID must be a number greater than 0.`
+    );
   }
   // Check if the policy ID is valid
   const policy = await RULES_ENGINE.policyExists(policyId);
