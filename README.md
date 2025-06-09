@@ -135,7 +135,29 @@ To verify the address was set correct, the following commmand should return the 
 cast call $CONTRACT_ADDRESS "rulesEngineAddress()(address)" --rpc-url $RPC_URL
 ```
 
-### 8. Apply the Policy and Test
+### 8. Set your Address as the Calling Contract Admin
+
+The ExampleContract extends the [RulesEngineClient](https://github.com/thrackle-io/forte-rules-engine/blob/main/src/client/RulesEngineClient.sol) to allow the ExampleContract to set the Calling Contract Admin. The Rules Engine requires this initial Admin designation to come directly from the Calling Contract. This ensures a malicious person cannot front-run setting the Calling Contract Admin. The setCallingContractAdmin() function MUST BE OVERRIDED WITH APPROPRIATE PERMISSION GATING in place for production instances. In this quickstart, we'll skip adding permission to this funciton since this is not a production environment. Set the Calling Contract Admin to the User Address with the following commands:
+
+Verify it's not already set:
+
+```bash
+cast call $RULES_ENGINE_ADDRESS "isCallingContractAdmin(address, address)(bool)" $CONTRACT_ADDRESS $USER_ADDRESS  --rpc-url $RPC_URL
+```
+
+Set the Calling Contract Admin:
+
+```bash
+cast send $CONTRACT_ADDRESS "setCallingContractAdmin(address)" $USER_ADDRESS --rpc-url $RPC_URL --private-key $PRIV_KEY
+```
+
+Verify the admin is now set (should return 'true'):
+
+```bash
+cast call $RULES_ENGINE_ADDRESS "isCallingContractAdmin(address, address)(bool)" $CONTRACT_ADDRESS $USER_ADDRESS  --rpc-url $RPC_URL
+```
+
+### 9. Apply the Policy and Test
 
 ```bash
 npx tsx index.ts applyPolicy $POLICY_ID $CONTRACT_ADDRESS
@@ -147,7 +169,7 @@ npx tsx index.ts applyPolicy $POLICY_ID $CONTRACT_ADDRESS
 cast send $CONTRACT_ADDRESS "transfer(address,uint256)" 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 10001 --rpc-url $RPC_URL --private-key $PRIV_KEY
 ```
 
-You should receive a revert with the text "Passed Test"
+You should receive a successful transaction!
 
 ### Test Failure Condition
 
