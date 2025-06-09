@@ -9,7 +9,8 @@ This repository will guide you through using the Forte Rules Engine in a local [
 5. Creating a sample policy in the Rules Engine
 6. Configuring and Deploying the ExampleContract
 7. Setting the Rules Engine Address in the ExampleContract
-8. Applying the policy to the sample contract and verifying functionality
+8. Set your address as the Calling Contract Admin
+9. Applying the policy to the sample contract and verifying functionality
 
 > **_NOTE:_** This guide was developed in a MacOS environment, some modification may be necessary to suit a Linux/Windows environment.
 
@@ -135,11 +136,11 @@ To verify the address was set correct, the following commmand should return the 
 cast call $CONTRACT_ADDRESS "rulesEngineAddress()(address)" --rpc-url $RPC_URL
 ```
 
-### 8. Set your Address as the Calling Contract Admin
+### 8. Set your address as the Calling Contract Admin
 
 The ExampleContract extends the [RulesEngineClient](https://github.com/thrackle-io/forte-rules-engine/blob/main/src/client/RulesEngineClient.sol) to allow the ExampleContract to set the Calling Contract Admin. The Rules Engine requires this initial Admin designation to come directly from the Calling Contract. This ensures a malicious person cannot front-run setting the Calling Contract Admin. The setCallingContractAdmin() function MUST BE OVERRIDED WITH APPROPRIATE PERMISSION GATING in place for production instances. In this quickstart, we'll skip adding permission to this funciton since this is not a production environment. Set the Calling Contract Admin to the User Address with the following commands:
 
-Verify it's not already set:
+Verify it's not already set (should return 'false'):
 
 ```bash
 cast call $RULES_ENGINE_ADDRESS "isCallingContractAdmin(address, address)(bool)" $CONTRACT_ADDRESS $USER_ADDRESS  --rpc-url $RPC_URL
