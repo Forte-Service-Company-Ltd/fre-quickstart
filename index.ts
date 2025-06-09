@@ -37,7 +37,7 @@ const foundryAccountAddress: `0x${string}` = process.env.USER_ADDRESS as `0x${st
  */
 const createTestConfig = async () => {
   config = createConfig({
-    chains: [process.env.LOCAL_CHAIN == "TRUE" ? foundry : baseSepolia],
+    chains: [process.env.LOCAL_CHAIN?.toLowerCase() == "true" ? foundry : baseSepolia],
     client({ chain }) {
       return createClient({
         chain,
@@ -67,11 +67,7 @@ async function setupPolicy(policyData: string): Promise<number> {
   }
 }
 
-async function injectModifiers(
-  policyJSONFile: string,
-  modifierFileName: string,
-  sourceContractFile: string
-) {
+async function injectModifiers(policyJSONFile: string, modifierFileName: string, sourceContractFile: string) {
   try {
     policyModifierGeneration(policyJSONFile, modifierFileName, [sourceContractFile]);
   } catch (error) {
@@ -96,9 +92,7 @@ async function applyPolicy(policyId: number, callingContractAddress: Address) {
 async function validatePolicyId(policyId: number): Promise<boolean> {
   // Check if the policy ID is a valid number
   if (isNaN(policyId) || policyId <= 0) {
-    throw new Error(
-      `Invalid policy ID: ${policyId}. The policy ID must be a number greater than 0.`
-    );
+    throw new Error(`Invalid policy ID: ${policyId}. The policy ID must be a number greater than 0.`);
   }
   // Check if the policy ID is valid
   const policy = await RULES_ENGINE.policyExists(policyId);
