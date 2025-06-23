@@ -178,4 +178,4 @@ You should receive a successful transaction!
 cast send $CONTRACT_ADDRESS "transfer(address,uint256)" 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 9999 --rpc-url $RPC_URL --private-key $PRIV_KEY
 ```
 
-You should receive a revert with the text "Failed Test"
+You should receive a revert with the text "Transfer Failed"
