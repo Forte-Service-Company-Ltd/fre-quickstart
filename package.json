@@ -1,6 +1,7 @@
 {
   "name": "forte-rules-engine-quickstart",
   "version": "1.0.0",
+  "type": "module",
   "description": "A quickstart project for utilizing the Forte Rules Engine through the SDK.",
   "keywords": [
     "forte",
