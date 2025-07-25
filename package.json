@@ -16,7 +16,7 @@
   "author": "Thrackle",
   "license": "UNLICENSED",
   "dependencies": {
-    "@thrackle-io/forte-rules-engine": "^0.0.1-rc.0",
+    "@thrackle-io/forte-rules-engine": "^0.1.0",
     "@thrackle-io/forte-rules-engine-sdk": "0.1.0",
     "@wagmi/core": "^2.17.3",
     "dotenv": "^16.5.0",
