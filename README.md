@@ -110,7 +110,24 @@ The [ExampleContract](./src/ExampleContract.sol) is a blank contract that confor
 npx tsx index.ts injectModifiers policy.json src/RulesEngineIntegration.sol src/ExampleContract.sol
 ```
 
-After running this command, it will inject the beforeXXX() modifier within the function specified within the policy.json file. Verify the contract compiles and deploy the contract with the following commands:
+After running this command, it will inject the beforeXXX() modifier within the function specified within the policy.json file. 
+
+> **_IMPORTANT:_**  
+> After running the `injectModifiers` script, you **must** manually update the `setCallingContractAdmin` function in your contract to include the `override` keyword.  
+> 
+> For example, update:
+> ```solidity
+> function setCallingContractAdmin(address callingContractAdmin) external {}
+> ```
+> to:
+> ```solidity
+> function setCallingContractAdmin(address callingContractAdmin) external override {
+>     // Add any required permission checks or custom logic here
+> }
+> ```
+> 
+For a detailed explanation of why this override is required and how to set the Calling Contract Admin, see [Step 8: Set your address as the Calling Contract Admin](#8-set-your-address-as-the-calling-contract-admin).
+Verify the contract compiles and deploy the contract with the following commands:
 
 ```bash
 forge script script/ExampleContract.s.sol --ffi --broadcast -vvv --non-interactive --rpc-url $RPC_URL --private-key $PRIV_KEY
