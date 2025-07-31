@@ -1,6 +1,7 @@
 {
   "name": "forte-rules-engine-quickstart",
   "version": "1.0.0",
+  "type": "module",
   "description": "A quickstart project for utilizing the Forte Rules Engine through the SDK.",
   "keywords": [
     "forte",
@@ -15,8 +16,8 @@
   "author": "Thrackle",
   "license": "UNLICENSED",
   "dependencies": {
-    "@thrackle-io/forte-rules-engine": "^0.0.3-rc.5",
-    "@thrackle-io/forte-rules-engine-sdk": "0.0.4-rc.3",
+    "@thrackle-io/forte-rules-engine": "^0.1.0",
+    "@thrackle-io/forte-rules-engine-sdk": "0.1.0",
     "@wagmi/core": "^2.17.3",
     "dotenv": "^16.5.0",
     "viem": "^2.28.1"
