@@ -98,6 +98,16 @@ async function setPolicy(policyIds: [number], callingContractAddress: Address) {
   }
 }
 
+async function getAllTrackers(policyId: number) {
+  try {
+    const trackers = await RULES_ENGINE.getAllTrackers(policyId);
+    console.log("Trackers:", trackers);
+  } catch (error) {
+    console.error(`Error getting all trackers: ${error}`);
+    throw error;
+  }
+}
+
 async function validatePolicyId(policyId: number): Promise<boolean> {
   // Check if the policy ID is a valid number
   if (isNaN(policyId) || policyId <= 0) {
@@ -150,6 +160,10 @@ async function main() {
     await validatePolicyId(policyId);
     const callingContractAddress = getAddress(process.argv[4]);
     await setPolicy([policyId], callingContractAddress);
+  } else if (process.argv[2] == "getAllTrackers") {
+    // getAllTrackers - npx getAllTrackers <policyId>
+    const policyId = Number(process.argv[3]);
+    await getAllTrackers(policyId);
   } else {
     console.log("Invalid command. Please use one of the following commands:");
     console.log("     setupPolicy <OPTIONAL: policyJSONFilePath>");
