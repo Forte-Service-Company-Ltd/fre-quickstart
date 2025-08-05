@@ -1,0 +1,41 @@
+{
+    "Policy": "Test Trackers of All Types Policy", 
+    "Description": "A test policy demonstrating all tracker types",
+    "PolicyType": "open",
+    "CallingFunctions": [
+      {
+        "name": "transfer(address,uint256)",
+        "functionSignature": "transfer(address,uint256)",
+        "encodedValues": "address to, uint256 value"
+      }
+    ],
+    "ForeignCalls": [],
+    "Trackers": [
+      {
+        "name": "trackerOne",
+        "type": "uint256",
+        "initialValue": "1"
+      },
+      {
+        "name": "trackerTwo",
+        "type": "address",
+        "initialValue": "0x0000000000000000000000000000000000000000"
+      },
+      {
+        "name": "trackerFour",
+        "type": "bytes",
+        "initialValue": "0x0000000000000000000000000000000000000000"
+      }
+    ],
+    "MappedTrackers": [],
+    "Rules": [
+      {
+        "Name": "Transfer Amount Check",
+        "Description": "Validates transfer amounts against threshold", 
+        "condition": "value > 0",
+        "positiveEffects": ["TRU:trackerOne += value", "TRU:trackerTwo = to", "TRU:trackerFour = hello world"],
+        "negativeEffects": ["revert(\"Transfer Failed\")"],
+        "callingFunction": "transfer(address,uint256)"
+      }
+    ]
+  }

@@ -1,21 +1,64 @@
 {
-  "Policy": "Test Policy",
+  "Policy": "Test Policy", 
+  "Description": "A test policy demonstrating basic transfer rules",
   "PolicyType": "open",
+  "CallingFunctions": [
+    {
+      "name": "transfer",
+      "functionSignature": "transfer(address,uint256)",
+      "encodedValues": "address to, uint256 value"
+    },
+    {
+      "name": "transferFrom",
+      "functionSignature": "transferFrom(address,address,uint256)",
+      "encodedValues": "address from, address to, uint256 value"
+    }
+  ],
   "ForeignCalls": [],
   "Trackers": [
     {
       "name": "trackerOne",
       "type": "uint256",
-      "initialValue": 1
+      "initialValue": "1"
+    },
+    {
+      "name": "trackerTwo",
+      "type": "address",
+      "initialValue": "0x0000000000000000000000000000000000000000"
+    },
+    {
+      "name": "trackerThree",
+      "type": "bool",
+      "initialValue": "false"
+    },
+    {
+      "name": "trackerFour",
+      "type": "bytes",
+      "initialValue": "0x0000000000000000000000000000000000000000"
+    },
+    {
+      "name": "trackerFive",
+      "type": "string",
+      "initialValue": "test"
     }
   ],
+  "MappedTrackers": [],
   "Rules": [
     {
+      "Name": "Transfer Amount Check",
+      "Description": "Validates transfer amounts against threshold", 
       "condition": "value > 10000",
       "positiveEffects": ["emit TransferSuccessful"],
       "negativeEffects": ["revert(\"Transfer Failed\")"],
-      "callingFunction": "transfer(address to, uint256 value)",
-      "encodedValues": "address to, uint256 value"
+      "callingFunction": "transfer(address to, uint256 value)"
+    },
+    {
+      "Name": "TransferFrom Amount Check",
+      "Description": "Validates transfer amounts against threshold", 
+      "condition": "value > 10000 && from == GV:TX_ORIGIN",
+      "positiveEffects": ["emit TransferSuccessful"],
+      "negativeEffects": ["revert(\"Transfer Failed\")"],
+      "callingFunction": "transferFrom(address from, address to, uint256 value)"
     }
   ]
 }

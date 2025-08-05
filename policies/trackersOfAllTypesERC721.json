@@ -1,0 +1,51 @@
+{
+    "Policy": "Test Trackers of All Types Policy", 
+    "Description": "A test policy demonstrating all tracker types",
+    "PolicyType": "open",
+    "CallingFunctions": [
+      {
+        "name": "transferFrom(address,address,uint256)",
+        "functionSignature": "transferFrom(address,address,uint256)",
+        "encodedValues": "address from, address to, uint256 id"
+      }
+    ],
+    "ForeignCalls": [],
+    "Trackers": [
+      {
+        "name": "trackerOne",
+        "type": "uint256",
+        "initialValue": "1"
+      },
+      {
+        "name": "trackerTwo",
+        "type": "address",
+        "initialValue": "0x0000000000000000000000000000000000000000"
+      },
+      {
+        "name": "trackerThree",
+        "type": "bool",
+        "initialValue": "false"
+      },
+      {
+        "name": "trackerFour",
+        "type": "bytes",
+        "initialValue": "0x0000000000000000000000000000000000000000"
+      },
+      {
+        "name": "trackerFive",
+        "type": "string",
+        "initialValue": "test"
+      }
+    ],
+    "MappedTrackers": [],
+    "Rules": [
+      {
+        "Name": "Transfer Amount Check",
+        "Description": "Validates transfer amounts against threshold", 
+        "condition": "id > 1",
+        "positiveEffects": ["TRU:trackerOne += id", "TRU:trackerTwo = to", "TRU:trackerThree = true", "TRU:trackerFour = 'hello world'", "TRU:trackerFive = 'hello world'"],
+        "negativeEffects": ["revert(\"Transfer Failed\")"],
+        "callingFunction": "transferFrom(address,address,uint256)"
+      }
+    ]
+  }

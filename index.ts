@@ -1,6 +1,5 @@
-import { RulesEngine, policyModifierGeneration } from "@thrackle-io/forte-rules-engine-sdk";
+import { RulesEngine, policyModifierGeneration, connectConfig } from "@thrackle-io/forte-rules-engine-sdk";
 import * as fs from "fs";
-import { connectConfig } from "@thrackle-io/forte-rules-engine-sdk/config";
 import {
   Address,
   createClient,
@@ -89,6 +88,16 @@ async function applyPolicy(policyId: number, callingContractAddress: Address) {
   }
 }
 
+async function setPolicy(policyIds: [number], callingContractAddress: Address) {
+  try {
+    await RULES_ENGINE.setPolicies(policyIds, callingContractAddress);
+    console.log("Policy set!");
+  } catch (error) {
+    console.error(`Error setting policy: ${error}`);
+    throw error;
+  }
+}
+
 async function validatePolicyId(policyId: number): Promise<boolean> {
   // Check if the policy ID is a valid number
   if (isNaN(policyId) || policyId <= 0) {
@@ -134,6 +143,13 @@ async function main() {
     await validatePolicyId(policyId);
     const callingContractAddress = getAddress(process.argv[4]);
     await applyPolicy(policyId, callingContractAddress);
+  } else if (process.argv[2] == "setPolicy") {
+    // setPolicy - npx setPolicy <policyIds> <address>
+
+    const policyId = Number(process.argv[3]);
+    await validatePolicyId(policyId);
+    const callingContractAddress = getAddress(process.argv[4]);
+    await setPolicy([policyId], callingContractAddress);
   } else {
     console.log("Invalid command. Please use one of the following commands:");
     console.log("     setupPolicy <OPTIONAL: policyJSONFilePath>");

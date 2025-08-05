@@ -1,0 +1,25 @@
+{
+    "Policy": "Test Policy", 
+    "Description": "A test policy demonstrating basic transfer rules",
+    "PolicyType": "open",
+    "CallingFunctions": [
+      {
+        "name": "transfer",
+        "functionSignature": "transfer(address,uint256)",
+        "encodedValues": "address to, uint256 value"
+      }
+    ],
+    "ForeignCalls": [],
+    "Trackers": [],
+    "MappedTrackers": [],
+    "Rules": [
+      {
+        "Name": "Transfer Amount Check",
+        "Description": "Validates transfer amounts against threshold", 
+        "condition": "value > 100",
+        "positiveEffects": ["emit TransferSuccessful"],
+        "negativeEffects": ["revert(\"Transfer Failed\")"],
+        "callingFunction": "transfer(address,uint256)"
+      }
+    ]
+  }

@@ -1,0 +1,93 @@
+{
+  "Policy": "Test Foreign Calls Policy",
+  "Description": "A test policy demonstrating basic foreign calls",
+  "PolicyType": "open",
+  "CallingFunctions": [
+    {
+      "name": "transfer(address,uint256)",
+      "functionSignature": "transfer(address,uint256)",
+      "encodedValues": "address to, uint256 value"
+    }
+  ],
+  "ForeignCalls": [
+    {
+      "name": "simpleCheck",
+      "address": "0xB0a01858969e7c04B4257062Cb2E61Ec02254e8E",
+      "function": "simpleCheck(uint256)",
+      "returnType": "uint256",
+      "valuesToPass": "value",
+      "mappedTrackerKeyValues": "",
+      "callingFunction": "transfer(address,uint256)"
+    },
+    {
+      "name": "square",
+      "address": "0xB0a01858969e7c04B4257062Cb2E61Ec02254e8E",
+      "function": "square(uint256)",
+      "returnType": "uint256",
+      "valuesToPass": "FC:simpleCheck",
+      "mappedTrackerKeyValues": "",
+      "callingFunction": "transfer(address,uint256)"
+    },
+    {
+      "name": "testSig",
+      "address": "0xB0a01858969e7c04B4257062Cb2E61Ec02254e8E",
+      "function": "testSig(uint256,string,uint256,string,address)",
+      "returnType": "bool",
+      "valuesToPass": "value, TR:trackerOne, TR:mappedTrackerTwo, TR:trackerTwo, TR:mappedTrackerOne",
+      "mappedTrackerKeyValues": "value, to",
+      "callingFunction": "transfer(address,uint256)"
+    }
+  ],
+  "Trackers": [
+    {
+      "name": "trackerOne",
+      "type": "string",
+      "initialValue": "hello"
+    },
+    {
+      "name": "trackerTwo",
+      "type": "string",
+      "initialValue": "world"
+    }
+  ],
+  "MappedTrackers": [
+    {
+      "name": "mappedTrackerOne",
+      "keyType": "address",
+      "valueType": "uint256",
+      "initialKeys": ["0xb7f8bc63bbcad18155201308c8f3540b07f84f5e"],
+      "initialValues": ["1"]
+    },
+    {
+      "name": "mappedTrackerTwo",
+      "keyType": "uint256",
+      "valueType": "address",
+      "initialKeys": ["1"],
+      "initialValues": ["0xb7f8bc63bbcad18155201308c8f3540b07f84f5e"]
+    },
+    {
+      "name": "mappedTrackerThree",
+      "keyType": "uint256",
+      "valueType": "string",
+      "initialKeys": ["1"],
+      "initialValues": ["hello"]
+    },
+    {
+      "name": "mappedTrackerFour",
+      "keyType": "address",
+      "valueType": "string",
+      "initialKeys": ["0xb7f8bc63bbcad18155201308c8f3540b07f84f5e"],
+      "initialValues": ["world"]
+    }
+  ],
+  "Rules": [
+    {
+      "Name": "Transfer Amount Check",
+      "Description": "Validates transfer amounts against threshold",
+      "condition": "FC:testSig == true",
+      "positiveEffects": ["emit TransferSuccessful"],
+      "negativeEffects": ["FC:simpleCheck AND FC:square"],
+      "callingFunction": "transfer(address,uint256)"
+    }
+  ]
+}
