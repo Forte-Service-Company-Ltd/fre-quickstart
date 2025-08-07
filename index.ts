@@ -108,6 +108,23 @@ async function getAllTrackers(policyId: number) {
   }
 }
 
+async function getInstructionSet(policyId: number) {
+  try {
+    const rule = await RULES_ENGINE.getRule(policyId, 1);
+    console.log("Rule:", rule);
+    console.log("Instruction set:", rule?.instructionSet);
+    for (const effect of rule?.posEffects) {
+      console.log("Positive Effect:", effect);
+    }
+    for (const effect of rule?.negEffects) {
+      console.log("Negative Effect:", effect);
+    }
+  } catch (error) {
+    console.error(`Error getting instruction set: ${error}`);
+    throw error;
+  }
+}
+
 async function validatePolicyId(policyId: number): Promise<boolean> {
   // Check if the policy ID is a valid number
   if (isNaN(policyId) || policyId <= 0) {
@@ -164,6 +181,10 @@ async function main() {
     // getAllTrackers - npx getAllTrackers <policyId>
     const policyId = Number(process.argv[3]);
     await getAllTrackers(policyId);
+  } else if (process.argv[2] == "getInstructionSet") {
+    // getInstructionSet - npx getInstructionSet <policyId>
+    const policyId = Number(process.argv[3]);
+    await getInstructionSet(policyId);
   } else {
     console.log("Invalid command. Please use one of the following commands:");
     console.log("     setupPolicy <OPTIONAL: policyJSONFilePath>");

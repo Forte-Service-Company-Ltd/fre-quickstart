@@ -23,7 +23,7 @@
       },
       {
         "name": "trackerFour",
-        "type": "bytes",
+        "type": "string",
         "initialValue": "0x0000000000000000000000000000000000000000"
       }
     ],
@@ -32,9 +32,9 @@
       {
         "Name": "Transfer Amount Check",
         "Description": "Validates transfer amounts against threshold", 
-        "condition": "value > 0",
-        "positiveEffects": ["TRU:trackerOne += value", "TRU:trackerTwo = to", "TRU:trackerFour = hello world"],
-        "negativeEffects": ["revert(\"Transfer Failed\")"],
+        "condition": "TR:trackerFour == \"hello world\" AND TR:trackerTwo == to",
+        "positiveEffects": ["revert(\"Transfer Failed\")"],
+        "negativeEffects": ["TRU:trackerOne += 1", "TRU:trackerTwo = to", "TRU:trackerFour = \"hello world\""],
         "callingFunction": "transfer(address,uint256)"
       }
     ]
