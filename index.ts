@@ -12,7 +12,7 @@ import {
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { Config, createConfig, mock, simulateContract } from "@wagmi/core";
-import { bscTestnet, foundry } from "@wagmi/core/chains";
+import { bscTestnet, foundry, baseSepolia, sepolia } from "@wagmi/core/chains";
 import * as dotenv from "dotenv";
 
 dotenv.config();
@@ -36,7 +36,7 @@ const foundryAccountAddress: `0x${string}` = process.env.USER_ADDRESS as `0x${st
  */
 const createTestConfig = async () => {
   config = createConfig({
-    chains: [process.env.LOCAL_CHAIN?.toLowerCase() == "true" ? foundry : bscTestnet],
+    chains: [process.env.LOCAL_CHAIN?.toLowerCase() == "true" ? foundry : baseSepolia],
     client({ chain }) {
       return createClient({
         chain,
