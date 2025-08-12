@@ -1,5 +1,6 @@
 {
   "Policy": "Test Policy",
+  "Description": "This policy is designed to test the transfer function with a value greater than 10000.",
   "PolicyType": "open",
   "CallingFunctions": [
     {
@@ -19,6 +20,8 @@
   "MappedTrackers": [],
   "Rules": [
     {
+      "Name": "TransferRule",
+      "Description": "Rule to check if the transfer value is greater than 10000.",
       "condition": "value > 10000",
       "positiveEffects": ["emit TransferSuccessful"],
       "negativeEffects": ["revert(\"Transfer Failed\")"],

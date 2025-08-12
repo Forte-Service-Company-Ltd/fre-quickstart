@@ -1,1 +1,1 @@
-@thrackle-io/forte-rules-engine/=node_modules/@thrackle-io/forte-rules-engine
+@fortefoundation/forte-rules-engine/=node_modules/@fortefoundation/forte-rules-engine

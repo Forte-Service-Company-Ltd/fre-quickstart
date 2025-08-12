@@ -76,7 +76,7 @@ PRIV_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 ```yaml+
 
 # address of the rules engine within the anvil state file
-RULES_ENGINE_ADDRESS=0x0165878A594ca255338adfa4d48449f69242Eb8F
+RULES_ENGINE_ADDRESS=0x8A791620dd6260079BF849Dc5567aDC3F2FdC318
 ```
 
 Once you are satisfied with the above configurations open a new terminal window (separate from the running anvil instance) and ensure the variables are exported in your local shell with the following command:
@@ -110,24 +110,37 @@ The [ExampleContract](./src/ExampleContract.sol) is a blank contract that confor
 npx tsx index.ts injectModifiers policy.json src/RulesEngineIntegration.sol src/ExampleContract.sol
 ```
 
-After running this command, it will inject the beforeXXX() modifier within the function specified within the policy.json file. 
+After running this command, it will inject the beforeXXX() modifier within the function specified within the policy.json file.
 
 > **_IMPORTANT:_**  
-> After running the `injectModifiers` script, you **must** manually update the `setCallingContractAdmin` function in your contract to include the `override` keyword.  
-> 
+> After running the `injectModifiers` script, you **must** manually update the `setCallingContractAdmin` function in your contract to include the `override` keyword.
+>
 > For example, update:
+>
 > ```solidity
-> function setCallingContractAdmin(address callingContractAdmin) external {}
+> function setCallingContractAdmin(address callingContractAdmin) public {}
 > ```
+>
 > to:
+>
 > ```solidity
-> function setCallingContractAdmin(address callingContractAdmin) external override {
->     // Add any required permission checks or custom logic here
+> address public owner;
+>
+> modifier onlyOwner() {
+>     require(msg.sender == owner, "Not the owner");
+>     _;
+> }
+>
+> constructor() {
+>     owner = msg.sender;
+> }
+> function setCallingContractAdmin(address callingContractAdmin) public override onlyOwner {
+>     super.setCallingContractAdmin(callingContractAdmin);
 > }
 > ```
-> 
-For a detailed explanation of why this override is required and how to set the Calling Contract Admin, see [Step 8: Set your address as the Calling Contract Admin](#8-set-your-address-as-the-calling-contract-admin).
-Verify the contract compiles and deploy the contract with the following commands:
+>
+> For a detailed explanation of why this override is required and how to set the Calling Contract Admin, see [Step 8: Set your address as the Calling Contract Admin](#8-set-your-address-as-the-calling-contract-admin).
+> Verify the contract compiles and deploy the contract with the following commands:
 
 ```bash
 forge script script/ExampleContract.s.sol --ffi --broadcast -vvv --non-interactive --rpc-url $RPC_URL --private-key $PRIV_KEY
