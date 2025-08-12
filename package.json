@@ -20,9 +20,9 @@
     "@fortefoundation/forte-rules-engine-sdk": "^0.3.1",
     "@wagmi/core": "^2.17.3",
     "dotenv": "^16.5.0",
-    "viem": "^2.28.1"
+    "viem": "^2.33.3"
   },
   "devDependencies": {
-    "@types/node": "^22.15.0"
+    "@types/node": "^24.2.1"
   }
 }
