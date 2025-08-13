@@ -16,13 +16,13 @@
   "author": "Thrackle",
   "license": "UNLICENSED",
   "dependencies": {
-    "@thrackle-io/forte-rules-engine": "^0.1.0",
-    "@thrackle-io/forte-rules-engine-sdk": "0.1.0",
+    "@fortefoundation/forte-rules-engine": "^0.3.2",
+    "@fortefoundation/forte-rules-engine-sdk": "^0.3.1",
     "@wagmi/core": "^2.17.3",
     "dotenv": "^16.5.0",
-    "viem": "^2.28.1"
+    "viem": "^2.33.3"
   },
   "devDependencies": {
-    "@types/node": "^22.15.0"
+    "@types/node": "^24.2.1"
   }
 }

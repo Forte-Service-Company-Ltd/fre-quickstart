@@ -1,6 +1,6 @@
 # Forte Rules Engine Quickstart (UNDER DEVELOPMENT)
 
-This repository will guide you through using the Forte Rules Engine in a local [anvil](https://book.getfoundry.sh/anvil/) devlopment environement utilizing the [Forte Rules Engine SDK](https://github.com/thrackle-io/forte-rules-engine-sdk). This guide will go over:
+This repository will guide you through using the Forte Rules Engine in a local [anvil](https://book.getfoundry.sh/anvil/) devlopment environement utilizing the [Forte Rules Engine SDK](https://github.com/forte-service-co-ltd/forte-rules-engine-sdk). This guide will go over:
 
 1. Environment prerequisites
 2. Building
@@ -24,7 +24,7 @@ This guide assumes the following tools are installed and configured correctly. P
 
 ## 2. Building
 
-Create a copy of our template repository in your own github account by navigating here: https://github.com/thrackle-io/fre-quickstart and clicking the "Use this template" button on GitHub.
+Create a copy of our template repository in your own github account by navigating here: https://github.com/forte-service-co-ltd/fre-quickstart and clicking the "Use this template" button on GitHub.
 
 ![Screenshot showing how to copy repo as a template](https://mintlify.s3.us-west-1.amazonaws.com/thrackle/images/use-template-gh.jpg)
 
@@ -76,7 +76,7 @@ PRIV_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 ```yaml+
 
 # address of the rules engine within the anvil state file
-RULES_ENGINE_ADDRESS=0x0165878A594ca255338adfa4d48449f69242Eb8F
+RULES_ENGINE_ADDRESS=0x8A791620dd6260079BF849Dc5567aDC3F2FdC318
 ```
 
 Once you are satisfied with the above configurations open a new terminal window (separate from the running anvil instance) and ensure the variables are exported in your local shell with the following command:
@@ -110,27 +110,40 @@ The [ExampleContract](./src/ExampleContract.sol) is a blank contract that confor
 npx tsx index.ts injectModifiers policy.json src/RulesEngineIntegration.sol src/ExampleContract.sol
 ```
 
-After running this command, it will inject the beforeXXX() modifier within the function specified within the policy.json file. 
+After running this command, it will inject the beforeXXX() modifier within the function specified within the policy.json file.
 
 > **_IMPORTANT:_**  
-> After running the `injectModifiers` script, you **must** manually update the `setCallingContractAdmin` function in your contract to include the `override` keyword.  
-> 
+> After running the `injectModifiers` script, you **must** manually update the `setCallingContractAdmin` function in your contract to include the `override` keyword.
+>
 > For example, update:
+>
 > ```solidity
-> function setCallingContractAdmin(address callingContractAdmin) external {}
+> function setCallingContractAdmin(address callingContractAdmin) public {}
 > ```
+>
 > to:
+>
 > ```solidity
-> function setCallingContractAdmin(address callingContractAdmin) external override {
->     // Add any required permission checks or custom logic here
+> address public owner;
+>
+> modifier onlyOwner() {
+>     require(msg.sender == owner, "Not the owner");
+>     _;
+> }
+>
+> constructor() {
+>     owner = msg.sender;
+> }
+> function setCallingContractAdmin(address callingContractAdmin) public override onlyOwner {
+>     super.setCallingContractAdmin(callingContractAdmin);
 > }
 > ```
-> 
-For a detailed explanation of why this override is required and how to set the Calling Contract Admin, see [Step 8: Set your address as the Calling Contract Admin](#8-set-your-address-as-the-calling-contract-admin).
-Verify the contract compiles and deploy the contract with the following commands:
+>
+> For a detailed explanation of why this override is required and how to set the Calling Contract Admin, see [Step 8: Set your address as the Calling Contract Admin](#8-set-your-address-as-the-calling-contract-admin).
+> Verify the contract compiles and deploy the contract with the following commands:
 
 ```bash
-forge script script/ExampleContract.s.sol --ffi --broadcast -vvv --non-interactive --rpc-url $RPC_URL --private-key $PRIV_KEY
+forge script script/ExampleContract.s.sol --broadcast --rpc-url $RPC_URL --private-key $PRIV_KEY
 ```
 
 Note the contract address, and export the address in your local terminal for subsequent testing.
@@ -141,7 +154,7 @@ export CONTRACT_ADDRESS=<0xYourContractAddress>
 
 ### 7. Set Rules Engine Address in the ExampleContract
 
-The ExampleContract extends the [RulesEngineClient](https://github.com/thrackle-io/forte-rules-engine/blob/main/src/client/RulesEngineClient.sol) to encapsulate storing the Rules Engine address and checks. It is recommended that all calling contracts extend this contract. This ensures calling contracts will only invoke the Rules Engine checks if the Rules Engine Address is specified. Set the Rules Engine Address in the ExampleContract via the following command:
+The ExampleContract extends the [RulesEngineClient](https://github.com/forte-service-co-ltd/forte-rules-engine/blob/main/src/client/RulesEngineClient.sol) to encapsulate storing the Rules Engine address and checks. It is recommended that all calling contracts extend this contract. This ensures calling contracts will only invoke the Rules Engine checks if the Rules Engine Address is specified. Set the Rules Engine Address in the ExampleContract via the following command:
 
 ```bash
 cast send $CONTRACT_ADDRESS "setRulesEngineAddress(address)" $RULES_ENGINE_ADDRESS --rpc-url $RPC_URL --private-key $PRIV_KEY
@@ -155,7 +168,7 @@ cast call $CONTRACT_ADDRESS "rulesEngineAddress()(address)" --rpc-url $RPC_URL
 
 ### 8. Set your address as the Calling Contract Admin
 
-The ExampleContract extends the [RulesEngineClient](https://github.com/thrackle-io/forte-rules-engine/blob/main/src/client/RulesEngineClient.sol) to allow the ExampleContract to set the Calling Contract Admin. The Rules Engine requires this initial Admin designation to come directly from the Calling Contract. This ensures a malicious person cannot front-run setting the Calling Contract Admin. The setCallingContractAdmin() function MUST BE OVERRIDED WITH APPROPRIATE PERMISSION GATING in place for production instances. In this quickstart, we'll skip adding permission to this funciton since this is not a production environment. Set the Calling Contract Admin to the User Address with the following commands:
+The ExampleContract extends the [RulesEngineClient](https://github.com/forte-service-co-ltd/forte-rules-engine/blob/main/src/client/RulesEngineClient.sol) to allow the ExampleContract to set the Calling Contract Admin. The Rules Engine requires this initial Admin designation to come directly from the Calling Contract. This ensures a malicious person cannot front-run setting the Calling Contract Admin. The setCallingContractAdmin() function MUST BE OVERRIDED WITH APPROPRIATE PERMISSION GATING in place for production instances. In this quickstart, we'll skip adding permission to this function since this is not a production environment. Set the Calling Contract Admin to the User Address with the following commands:
 
 Verify it's not already set (should return 'false'):
 
