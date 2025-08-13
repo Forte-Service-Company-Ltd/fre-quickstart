@@ -26,7 +26,7 @@ This guide assumes the following tools are installed and configured correctly. P
 
 Create a copy of our template repository in your own github account by navigating here: https://github.com/forte-service-company-ltd/fre-quickstart and clicking the "Use this template" button on GitHub.
 
-![Screenshot showing how to copy repo as a template](https://mintlify.s3.us-west-1.amazonaws.com/thrackle/images/use-template-gh.jpg)
+![Screenshot showing how to copy repo as a template](https://github.com/Forte-Service-Company-Ltd/fre-quickstart/tree/main/image/use-template-gh.jpg)
 
 Next, clone the freshly created repository to your local machine:
 
