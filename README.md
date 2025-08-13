@@ -1,6 +1,6 @@
 # Forte Rules Engine Quickstart (UNDER DEVELOPMENT)
 
-This repository will guide you through using the Forte Rules Engine in a local [anvil](https://book.getfoundry.sh/anvil/) devlopment environement utilizing the [Forte Rules Engine SDK](https://github.com/Forte-Service-Co-Ltd/forte-rules-engine-sdk). This guide will go over:
+This repository will guide you through using the Forte Rules Engine in a local [anvil](https://book.getfoundry.sh/anvil/) devlopment environement utilizing the [Forte Rules Engine SDK](https://github.com/forte-service-company-ltd/forte-rules-engine-sdk). This guide will go over:
 
 1. Environment prerequisites
 2. Building
@@ -24,7 +24,7 @@ This guide assumes the following tools are installed and configured correctly. P
 
 ## 2. Building
 
-Create a copy of our template repository in your own github account by navigating here: https://github.com/Forte-Service-Co-Ltd/fre-quickstart and clicking the "Use this template" button on GitHub.
+Create a copy of our template repository in your own github account by navigating here: https://github.com/forte-service-company-ltd/fre-quickstart and clicking the "Use this template" button on GitHub.
 
 ![Screenshot showing how to copy repo as a template](https://mintlify.s3.us-west-1.amazonaws.com/thrackle/images/use-template-gh.jpg)
 
@@ -154,7 +154,7 @@ export CONTRACT_ADDRESS=<0xYourContractAddress>
 
 ### 7. Set Rules Engine Address in the ExampleContract
 
-The ExampleContract extends the [RulesEngineClient](https://github.com/Forte-Service-Co-Ltd/forte-rules-engine/blob/main/src/client/RulesEngineClient.sol) to encapsulate storing the Rules Engine address and checks. It is recommended that all calling contracts extend this contract. This ensures calling contracts will only invoke the Rules Engine checks if the Rules Engine Address is specified. Set the Rules Engine Address in the ExampleContract via the following command:
+The ExampleContract extends the [RulesEngineClient](https://github.com/forte-service-company-ltd/forte-rules-engine/blob/main/src/client/RulesEngineClient.sol) to encapsulate storing the Rules Engine address and checks. It is recommended that all calling contracts extend this contract. This ensures calling contracts will only invoke the Rules Engine checks if the Rules Engine Address is specified. Set the Rules Engine Address in the ExampleContract via the following command:
 
 ```bash
 cast send $CONTRACT_ADDRESS "setRulesEngineAddress(address)" $RULES_ENGINE_ADDRESS --rpc-url $RPC_URL --private-key $PRIV_KEY
@@ -168,7 +168,7 @@ cast call $CONTRACT_ADDRESS "rulesEngineAddress()(address)" --rpc-url $RPC_URL
 
 ### 8. Set your address as the Calling Contract Admin
 
-The ExampleContract extends the [RulesEngineClient](https://github.com/Forte-Service-Co-Ltd/forte-rules-engine/blob/main/src/client/RulesEngineClient.sol) to allow the ExampleContract to set the Calling Contract Admin. The Rules Engine requires this initial Admin designation to come directly from the Calling Contract. This ensures a malicious person cannot front-run setting the Calling Contract Admin. The setCallingContractAdmin() function MUST BE OVERRIDED WITH APPROPRIATE PERMISSION GATING in place for production instances. In this quickstart, we'll skip adding permission to this function since this is not a production environment. Set the Calling Contract Admin to the User Address with the following commands:
+The ExampleContract extends the [RulesEngineClient](https://github.com/forte-service-company-ltd/forte-rules-engine/blob/main/src/client/RulesEngineClient.sol) to allow the ExampleContract to set the Calling Contract Admin. The Rules Engine requires this initial Admin designation to come directly from the Calling Contract. This ensures a malicious person cannot front-run setting the Calling Contract Admin. The setCallingContractAdmin() function MUST BE OVERRIDED WITH APPROPRIATE PERMISSION GATING in place for production instances. In this quickstart, we'll skip adding permission to this function since this is not a production environment. Set the Calling Contract Admin to the User Address with the following commands:
 
 Verify it's not already set (should return 'false'):
 
