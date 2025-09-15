@@ -16,8 +16,8 @@
   "author": "Thrackle",
   "license": "UNLICENSED",
   "dependencies": {
-    "@fortefoundation/forte-rules-engine": "^0.4.0",
-    "@fortefoundation/forte-rules-engine-sdk": "^0.7.0",
+    "@fortefoundation/forte-rules-engine": "^0.5.0",
+    "@fortefoundation/forte-rules-engine-sdk": "^0.8.0",
     "@wagmi/core": "^2.17.3",
     "dotenv": "^16.5.0",
     "viem": "^2.33.3"
