@@ -3,21 +3,15 @@
   "version": "1.0.0",
   "type": "module",
   "description": "A quickstart project for utilizing the Forte Rules Engine through the SDK.",
-  "keywords": [
-    "forte",
-    "rules-engine",
-    "sdk",
-    "quickstart",
-    "typescript"
-  ],
+  "keywords": ["forte", "rules-engine", "sdk", "quickstart", "typescript"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Thrackle",
   "license": "UNLICENSED",
   "dependencies": {
-    "@fortefoundation/forte-rules-engine": "^0.5.0",
-    "@fortefoundation/forte-rules-engine-sdk": "^0.8.0",
+    "@fortefoundation/forte-rules-engine": "^0.8.0",
+    "@fortefoundation/forte-rules-engine-sdk": "^0.11.0",
     "@wagmi/core": "^2.17.3",
     "dotenv": "^16.5.0",
     "viem": "^2.33.3"
