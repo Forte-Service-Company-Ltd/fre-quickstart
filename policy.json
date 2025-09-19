@@ -23,7 +23,7 @@
       "Name": "TransferRule",
       "Description": "Rule to check if the transfer value is greater than 10000.",
       "condition": "value > 10000",
-      "positiveEffects": ["emit TransferSuccessful"],
+      "positiveEffects": ["emit \"TransferSuccessful\" "],
       "negativeEffects": ["revert(\"Transfer Failed\")"],
       "callingFunction": "transfer(address to, uint256 value)"
     }
