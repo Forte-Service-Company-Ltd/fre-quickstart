@@ -30,8 +30,8 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: '20'
+          cache: 'npm'
       - name: Install node dependencies
         run: |
           npm install
