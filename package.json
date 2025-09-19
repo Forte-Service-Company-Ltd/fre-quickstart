@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "type": "module",
   "description": "A quickstart project for utilizing the Forte Rules Engine through the SDK.",
-  "keywords": ["forte", "rules-engine", "sdk", "quickstart", "typescript"],
+  "keywords": [
+    "forte",
+    "rules-engine",
+    "sdk",
+    "quickstart",
+    "typescript"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
