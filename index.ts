@@ -1,4 +1,8 @@
-import { RulesEngine, policyModifierGeneration, connectConfig } from "@fortefoundation/forte-rules-engine-sdk";
+import {
+  RulesEngine,
+  policyModifierGeneration,
+  connectConfig,
+} from "@fortefoundation/forte-rules-engine-sdk";
 import * as fs from "fs";
 import {
   Address,
@@ -17,7 +21,9 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 // Hardcoded address of the diamond in diamondDeployedAnvilState.json
-const RULES_ENGINE_ADDRESS: Address = getAddress(process.env.RULES_ENGINE_ADDRESS as string);
+const RULES_ENGINE_ADDRESS: Address = getAddress(
+  process.env.RULES_ENGINE_ADDRESS as string
+);
 var config: Config;
 var RULES_ENGINE: RulesEngine;
 
@@ -26,8 +32,10 @@ var RULES_ENGINE: RulesEngine;
  */
 //-------------------------------------------------------------------------------------------------------------
 const foundryPrivateKey: `0x${string}` = process.env.PRIV_KEY as `0x${string}`;
-export const account: PrivateKeyAccount = privateKeyToAccount(foundryPrivateKey);
-const foundryAccountAddress: `0x${string}` = process.env.USER_ADDRESS as `0x${string}`;
+export const account: PrivateKeyAccount =
+  privateKeyToAccount(foundryPrivateKey);
+const foundryAccountAddress: `0x${string}` = process.env
+  .USER_ADDRESS as `0x${string}`;
 //-------------------------------------------------------------------------------------------------------------
 
 /**
@@ -36,7 +44,9 @@ const foundryAccountAddress: `0x${string}` = process.env.USER_ADDRESS as `0x${st
  */
 const createTestConfig = async () => {
   config = createConfig({
-    chains: [process.env.LOCAL_CHAIN?.toLowerCase() == "true" ? foundry : bscTestnet],
+    chains: [
+      process.env.LOCAL_CHAIN?.toLowerCase() == "true" ? foundry : bscTestnet,
+    ],
     client({ chain }) {
       return createClient({
         chain,
@@ -66,9 +76,15 @@ async function setupPolicy(policyData: string): Promise<number> {
   }
 }
 
-async function injectModifiers(policyJSONFile: string, modifierFileName: string, sourceContractFile: string) {
+async function injectModifiers(
+  policyJSONFile: string,
+  modifierFileName: string,
+  sourceContractFile: string
+) {
   try {
-    policyModifierGeneration(policyJSONFile, modifierFileName, [sourceContractFile]);
+    policyModifierGeneration(policyJSONFile, modifierFileName, [
+      sourceContractFile,
+    ]);
   } catch (error) {
     console.error(`Error injecting modifiers: ${error}`);
     throw error;
@@ -88,10 +104,23 @@ async function applyPolicy(policyId: number, callingContractAddress: Address) {
   }
 }
 
+async function deletePolicy(policyId: number) {
+  try {
+    // Delete the policy!
+    await RULES_ENGINE.deletePolicy(policyId);
+    console.log("Policy deleted!");
+  } catch (error) {
+    console.error(`Error deleteing policy: ${error}`);
+    throw error;
+  }
+}
+
 async function validatePolicyId(policyId: number): Promise<boolean> {
   // Check if the policy ID is a valid number
   if (isNaN(policyId) || policyId <= 0) {
-    throw new Error(`Invalid policy ID: ${policyId}. The policy ID must be a number greater than 0.`);
+    throw new Error(
+      `Invalid policy ID: ${policyId}. The policy ID must be a number greater than 0.`
+    );
   }
   // Check if the policy ID is valid
   const policy = await RULES_ENGINE.policyExists(policyId);
@@ -120,13 +149,22 @@ async function main() {
       return;
     }
     await setupPolicy(policyData);
+  } else if (process.argv[2] === "deletePolicy") {
+    const policyId = Number(process.argv[3]);
+    await validatePolicyId(policyId);
+    await deletePolicy(policyId);
   } else if (process.argv[2] == "injectModifiers") {
     // injectModifiers - npx injectModifiers <policyJSONFilePath> <newModifierFileName> <sourceContractFile>
     // npx tsx index.ts injectModifiers policy.json src/RulesEngineIntegration src/ExampleContract.sol
     const policyJSONFile = process.argv[3] || "policy.json";
-    const newModifierFileName = process.argv[4] || "src/RulesEngineIntegration.sol";
+    const newModifierFileName =
+      process.argv[4] || "src/RulesEngineIntegration.sol";
     const sourceContractFile = process.argv[5] || "src/ExampleContract.sol";
-    await injectModifiers(policyJSONFile, newModifierFileName, sourceContractFile);
+    await injectModifiers(
+      policyJSONFile,
+      newModifierFileName,
+      sourceContractFile
+    );
   } else if (process.argv[2] == "applyPolicy") {
     // applyPolicy - npx applyPolicy <policyId> <address>
     const policyId = Number(process.argv[3]);
@@ -136,7 +174,9 @@ async function main() {
   } else {
     console.log("Invalid command. Please use one of the following commands:");
     console.log("     setupPolicy <OPTIONAL: policyJSONFilePath>");
-    console.log("     injectModifiers <policyId> <sourceContractFile> <destinationModifierFile>");
+    console.log(
+      "     injectModifiers <policyId> <sourceContractFile> <destinationModifierFile>"
+    );
     console.log("     applyPolicy <policyId> <address>");
   }
 }
