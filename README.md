@@ -85,8 +85,8 @@ Once you are satisfied with the above configurations open a new terminal window 
 cp .env.sample .env
 source .env
 ```
-
-> **_WARNING:_** The SDK utilizes the Rules Engine address and private key values from the environment file. This requires that you name your file `.env`, which enables the SDK to access the values.
+> [!WARNING]  
+> The SDK utilizes the Rules Engine address and private key values from the environment file. This requires that you name your file `.env`, which enables the SDK to access the values.
 
 ### 5. Create the sample policy in the Rules Engine
 
@@ -112,8 +112,8 @@ npx tsx index.ts injectModifiers policy.json src/RulesEngineIntegration.sol src/
 
 After running this command, it will inject the beforeXXX() modifier within the function specified within the policy.json file.
 
-> **_IMPORTANT:_**  
-> After running the `injectModifiers` script, you **must** manually update the `setCallingContractAdmin` function in your contract to include the `override` keyword.
+> [!IMPORTANT]  
+> After running the `injectModifiers` script, you **must** manually update the `setCallingContractAdmin` function in your contract to include the `override` keyword and set the appropriate permissions (e.g. using onlyOwner).
 >
 > For example, update:
 >
