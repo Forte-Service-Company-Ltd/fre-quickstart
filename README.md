@@ -160,7 +160,7 @@ The ExampleContract extends the [RulesEngineClient](https://github.com/forte-ser
 cast send $CONTRACT_ADDRESS "setRulesEngineAddress(address)" $RULES_ENGINE_ADDRESS --rpc-url $RPC_URL --private-key $PRIV_KEY
 ```
 
-To verify the address was set correctly, the following commmand should return the same Rules Engine Address:
+To verify the address was set correctly, the following command should return the same Rules Engine Address:
 
 ```bash
 cast call $CONTRACT_ADDRESS "rulesEngineAddress()(address)" --rpc-url $RPC_URL
