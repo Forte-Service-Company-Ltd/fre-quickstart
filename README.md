@@ -93,7 +93,7 @@ Then, make sure your environmental variables are exported:
 source .env
 ```
 
-> **_WARNING:_** The SDK utilizes the Rules Engine address and private key values from the environment file. This requires that you name your file `.env`, which enables the SDK to access the values.
+> [!WARNING] The SDK utilizes the Rules Engine address and private key values from the environment file. This requires that you name your file `.env`, which enables the SDK to access the values.
 
 ### 5. Create the sample policy in the Rules Engine
 
