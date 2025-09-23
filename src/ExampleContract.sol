@@ -6,7 +6,7 @@ pragma solidity ^0.8.13;
  */
 
 contract ExampleContract {
-    function transfer(address to, uint256 value) public returns (bool) {
+    function transfer(address to, uint256 value, bytes memory data) public returns (bool) {
         // this function is purposefully empty
         return true;
     }
