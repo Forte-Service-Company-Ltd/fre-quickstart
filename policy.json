@@ -1,6 +1,6 @@
 {
-  "Policy": "Test Policy",
-  "Description": "This policy is designed to test the transfer function with a value greater than 10000.",
+  "Policy": "Test Foreign Call Policy",
+  "Description": "This policy is designed to test the foreign call function.",
   "PolicyType": "open",
   "CallingFunctions": [
     {
@@ -9,7 +9,62 @@
       "encodedValues": "address to, uint256 value"
     }
   ],
-  "ForeignCalls": [],
+  "ForeignCalls": [
+    {
+      "name": "someFunction",
+      "address": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
+      "function": "someFunction()",
+      "returnType": "void",
+      "valuesToPass": "value",
+      "callingFunction": "transfer(address to, uint256 value)",
+      "mappedTrackerKeyValues": ""
+    },
+    {
+      "name": "aSetterFunctionWithValue",
+      "address": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
+      "function": "aSetterFunction(uint256)",
+      "returnType": "void",
+      "valuesToPass": "value",
+      "callingFunction": "transfer(address to, uint256 value)",
+      "mappedTrackerKeyValues": ""
+    },
+    {
+      "name": "aSetterFunctionWithTracker",
+      "address": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
+      "function": "aSetterFunction(uint256)",
+      "returnType": "void",
+      "valuesToPass": "TR:trackerOne",
+      "callingFunction": "transfer(address to, uint256 value)",
+      "mappedTrackerKeyValues": ""
+    },
+    {
+      "name": "aSetterFunctionWithBlockNumber",
+      "address": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
+      "function": "aSetterFunction(uint256)",
+      "returnType": "void",
+      "valuesToPass": "GV:BLOCK_NUMBER",
+      "callingFunction": "transfer(address to, uint256 value)",
+      "mappedTrackerKeyValues": ""
+    },
+    {
+      "name": "aGetterFunction",
+      "address": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
+      "function": "aGetterFunction()",
+      "returnType": "uint256",
+      "valuesToPass": "GV:MSG_SENDER",
+      "callingFunction": "transfer(address to, uint256 value)",
+      "mappedTrackerKeyValues": ""
+    },
+    {
+      "name": "setSomeMsgData",
+      "address": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
+      "function": "setSomeMsgData(bytes)",
+      "returnType": "void",
+      "valuesToPass": "GV:MSG_DATA",
+      "callingFunction": "transfer(address to, uint256 value)",
+      "mappedTrackerKeyValues": ""
+    }
+  ],
   "Trackers": [
     {
       "name": "trackerOne",
@@ -21,9 +76,9 @@
   "Rules": [
     {
       "Name": "TransferRule",
-      "Description": "Rule to check if the transfer value is greater than 10000.",
-      "condition": "value > 10000",
-      "positiveEffects": ["emit \"TransferSuccessful\" "],
+      "Description": "Rule to test the foreign call functions",
+      "condition": "FC:someFunction == true AND (FC:aGetterFunction == (GV:BLOCK_NUMBER + value + TR:trackerOne) AND (FC:aSetterFunctionWithValue AND (FC:aSetterFunctionWithTracker AND FC:aSetterFunctionWithBlockNumber)))",
+      "positiveEffects": ["FC:setSomeMsgData(GV:MSG_DATA)"],
       "negativeEffects": ["revert(\"Transfer Failed\")"],
       "callingFunction": "transfer(address to, uint256 value)"
     }
