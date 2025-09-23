@@ -17,7 +17,7 @@
       "initialValue": "0"
     },
     {
-      "name": "washTradingTracker",
+      "name": "lastReset",
       "type": "uint256",
       "initialValue": "0"
     }
@@ -25,19 +25,19 @@
   "MappedTrackers": [],
   "Rules": [
     {
+      "Name": "washTrading",
+      "Description": "Reset volume every 46 seconds",
+      "condition": "GV:BLOCK_TIMESTAMP - TR:lastReset > 45",
+      "positiveEffects": ["emit \"TransferSuccessful\" ", "TRU:lastReset = GV:BLOCK_TIMESTAMP", "TRU:trackerOne = 0"],
+      "negativeEffects": [],
+      "callingFunction": "transfer(address to, uint256 value)"
+    },
+    {
       "Name": "tradingVolume",
       "Description": "Revert if volume has gone above 5000",
       "condition": "TR:trackerOne < 5000",
       "positiveEffects": ["emit \"TransferSuccessful\" ", "TRU:trackerOne += value"],
-      "negativeEffects": ["revert(\"Transfer Failed\")"],
-      "callingFunction": "transfer(address to, uint256 value)"
-    },
-    {
-      "Name": "washTrading",
-      "Description": "Revert if a transfer happens in less than 30 seconds",
-      "condition": "GV:BLOCK_TIMESTAMP - TR:washTradingTracker > 30",
-      "positiveEffects": ["emit \"TransferSuccessful\" ", "TRU:washTradingTracker = GV:BLOCK_TIMESTAMP"],
-      "negativeEffects": ["revert(\"Transfer Failed\")"],
+      "negativeEffects": ["revert(\"Max Volume\")"],
       "callingFunction": "transfer(address to, uint256 value)"
     }
   ]
