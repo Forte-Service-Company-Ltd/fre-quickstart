@@ -22,7 +22,7 @@
     {
       "Name": "TagRule",
       "Description": "Revert if an address doesn't have a specific tag",
-      "condition": "tag != trackerOne",
+      "condition": "tag != \"myTag\"",
       "positiveEffects": ["emit \"TransferSuccessful\" "],
       "negativeEffects": ["revert(\"Transfer Failed\")"],
       "callingFunction": "transfer(address to, uint256 value)"
