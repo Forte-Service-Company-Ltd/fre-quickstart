@@ -13,17 +13,30 @@
   "Trackers": [
     {
       "name": "trackerOne",
-      "type": "string",
-      "initialValue": "myTag"
+      "type": "uint256",
+      "initialValue": "0"
+    },
+    {
+      "name": "washTradingTracker",
+      "type": "uint256",
+      "initialValue": "0"
     }
   ],
   "MappedTrackers": [],
   "Rules": [
     {
-      "Name": "TagRule",
-      "Description": "Revert if an address doesn't have a specific tag",
-      "condition": "tag != \"myTag\"",
-      "positiveEffects": ["emit \"TransferSuccessful\" "],
+      "Name": "tradingVolume",
+      "Description": "Revert if volume has gone above 5000",
+      "condition": "TR:trackerOne < 5000",
+      "positiveEffects": ["emit \"TransferSuccessful\" ", "TRU:trackerOne += value"],
+      "negativeEffects": ["revert(\"Transfer Failed\")"],
+      "callingFunction": "transfer(address to, uint256 value)"
+    },
+    {
+      "Name": "washTrading",
+      "Description": "Revert if a transfer happens in less than 30 seconds",
+      "condition": "GV:BLOCK_TIMESTAMP - TR:washTradingTracker > 30",
+      "positiveEffects": ["emit \"TransferSuccessful\" ", "TRU:washTradingTracker = GV:BLOCK_TIMESTAMP"],
       "negativeEffects": ["revert(\"Transfer Failed\")"],
       "callingFunction": "transfer(address to, uint256 value)"
     }
