@@ -116,7 +116,11 @@ async function validatePolicyId(policyId: number): Promise<boolean> {
 async function main() {
   await createTestConfig()
   var client = config.getClient({ chainId: config.chains[0].id })
-  RULES_ENGINE = new RulesEngine(RULES_ENGINE_ADDRESS, config, client)
+  const maybeRulesEngine = await RulesEngine.create(RULES_ENGINE_ADDRESS, config, client)
+  if (!maybeRulesEngine) {
+    throw new Error('Failed to create RulesEngine instance. Returned value is null.')
+  }
+  RULES_ENGINE = maybeRulesEngine
   await connectConfig(config, 0)
   // Assuming a syntax of npx <run command> <args>
   if (process.argv[2] == 'setupPolicy') {
