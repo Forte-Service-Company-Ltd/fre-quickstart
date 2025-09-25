@@ -1,4 +1,8 @@
-import { RulesEngine, policyModifierGeneration, connectConfig } from "@fortefoundation/forte-rules-engine-sdk";
+import {
+  RulesEngine,
+  policyModifierGeneration,
+  connectConfig,
+} from "@fortefoundation/forte-rules-engine-sdk";
 import * as fs from "fs";
 import {
   Address,
@@ -12,7 +16,7 @@ import {
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { Config, createConfig, mock, simulateContract } from "@wagmi/core";
-import { bscTestnet, foundry } from "@wagmi/core/chains";
+import { foundry, sepolia, baseSepolia } from "@wagmi/core/chains";
 import * as dotenv from "dotenv";
 
 dotenv.config();
@@ -31,12 +35,34 @@ const foundryAccountAddress: `0x${string}` = process.env.USER_ADDRESS as `0x${st
 //-------------------------------------------------------------------------------------------------------------
 
 /**
- * Creates a connection to the local anvil instance.
- * Separate configs will need to be created to communicate with different chains
+ * Gets the chain configuration based on the NETWORK environment variable
+ */
+const getChainConfig = () => {
+  const network = process.env.NETWORK?.toLowerCase();
+
+  switch (network) {
+    case "sepolia":
+      return sepolia;
+    case "base-sepolia":
+      return baseSepolia;
+    case "local":
+    case "anvil":
+    case "foundry":
+      return foundry;
+    default:
+      return sepolia;
+  }
+};
+
+/**
+ * Creates a connection to the specified network.
+ * Supports: local/anvil, bsc, sepolia, basesepolia
  */
 const createTestConfig = async () => {
+  const selectedChain = getChainConfig();
+
   config = createConfig({
-    chains: [process.env.LOCAL_CHAIN?.toLowerCase() == "true" ? foundry : bscTestnet],
+    chains: [selectedChain],
     client({ chain }) {
       return createClient({
         chain,
@@ -66,7 +92,11 @@ async function setupPolicy(policyData: string): Promise<number> {
   }
 }
 
-async function injectModifiers(policyJSONFile: string, modifierFileName: string, sourceContractFile: string) {
+async function injectModifiers(
+  policyJSONFile: string,
+  modifierFileName: string,
+  sourceContractFile: string
+) {
   try {
     policyModifierGeneration(policyJSONFile, modifierFileName, [sourceContractFile]);
   } catch (error) {
@@ -91,7 +121,9 @@ async function applyPolicy(policyId: number, callingContractAddress: Address) {
 async function validatePolicyId(policyId: number): Promise<boolean> {
   // Check if the policy ID is a valid number
   if (isNaN(policyId) || policyId <= 0) {
-    throw new Error(`Invalid policy ID: ${policyId}. The policy ID must be a number greater than 0.`);
+    throw new Error(
+      `Invalid policy ID: ${policyId}. The policy ID must be a number greater than 0.`
+    );
   }
   // Check if the policy ID is valid
   const policy = await RULES_ENGINE.policyExists(policyId);
@@ -105,7 +137,20 @@ async function validatePolicyId(policyId: number): Promise<boolean> {
 async function main() {
   await createTestConfig();
   var client = config.getClient({ chainId: config.chains[0].id });
-  RULES_ENGINE = new RulesEngine(RULES_ENGINE_ADDRESS, config, client);
+  // Determine confirmation count based on network
+  const network = process.env.NETWORK?.toLowerCase();
+  const confirmationCount = network === "basesepolia" ? 2 : 1;
+
+  const rulesEngineResult = await RulesEngine.create(
+    RULES_ENGINE_ADDRESS,
+    config,
+    client,
+    confirmationCount
+  );
+  if (!rulesEngineResult) {
+    throw new Error("Failed to create RulesEngine instance");
+  }
+  RULES_ENGINE = rulesEngineResult;
   await connectConfig(config, 0);
   // Assuming a syntax of npx <run command> <args>
   if (process.argv[2] == "setupPolicy") {
