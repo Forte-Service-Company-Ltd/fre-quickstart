@@ -139,7 +139,7 @@ async function main() {
   var client = config.getClient({ chainId: config.chains[0].id });
   // Determine confirmation count based on network
   const network = process.env.NETWORK?.toLowerCase();
-  const confirmationCount = network === "basesepolia" ? 2 : 1;
+  const confirmationCount = network === "base-sepolia" ? 2 : 1;
 
   const rulesEngineResult = await RulesEngine.create(
     RULES_ENGINE_ADDRESS,
