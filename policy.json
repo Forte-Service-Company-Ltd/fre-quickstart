@@ -4,9 +4,9 @@
   "PolicyType": "open",
   "CallingFunctions": [
     {
-      "name": "transfer(address to, uint256 value)",
-      "functionSignature": "transfer(address to, uint256 value)",
-      "encodedValues": "address to, uint256 value"
+      "Name": "transfer",
+      "FunctionSignature": "transfer(address to, uint256 value)",
+      "EncodedValues": "address to, uint256 value"
     }
   ],
   "ForeignCalls": [],
@@ -16,10 +16,10 @@
     {
       "Name": "TransferRule",
       "Description": "Rule to check if the transfer value is greater than 10000.",
-      "condition": "value > 10000",
-      "positiveEffects": ["emit \"TransferSuccessful\""],
-      "negativeEffects": ["revert(\"Transfer Failed\")"],
-      "callingFunction": "transfer(address to, uint256 value)"
+      "Condition": "value > 10000",
+      "PositiveEffects": ["emit \"TransferSuccessful\""],
+      "NegativeEffects": ["revert(\"Transfer Failed\")"],
+      "CallingFunction": "transfer"
     }
   ]
 }
