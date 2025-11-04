@@ -150,6 +150,17 @@ async function getMappedTrackerValue(policyId: number, index: number, trackerKey
   }
 }
 
+async function updatePolicy(policyId: number, policyJson: string) {
+  try {
+    // Delete the policy!
+    await RULES_ENGINE.updatePolicy(policyJson, policyId)
+    console.log('Policy updated!')
+  } catch (error) {
+    console.error(`Error updating policy: ${error}`)
+    throw error
+  }
+}
+
 async function deletePolicy(policyId: number) {
   try {
     // Delete the policy!
@@ -248,6 +259,68 @@ async function main() {
     }
     console.log(JSON.stringify(trackerJson))
     await updateMappedTracker(policyId, trackerId, JSON.stringify(trackerJson))
+    // const callingContractAddress = getAddress(process.argv[4])
+    // await applyPolicy(policyId, callingContractAddress)
+  } else if (process.argv[2] == 'updatePolicy') {
+    const policyId = Number(process.argv[3])
+    const trackerJson = {
+      Policy: 'Vesting Schedule',
+      Description: '4-year vesting schedule with 12-month cliff and monthly distribution',
+      PolicyType: 'open',
+      CallingFunctions: [
+        {
+          Name: 'Transfer',
+          FunctionSignature: 'transfer(address to, uint256 value)',
+          EncodedValues: 'address to, uint256 value, uint256 senderBalance',
+        },
+        {
+          Name: 'TransferFrom',
+          FunctionSignature: 'transferFrom(address from, address to, uint256 value)',
+          EncodedValues: 'address from, address to, uint256 value, uint256 senderBalance',
+        },
+      ],
+      ForeignCalls: [],
+      MappedTrackers: [
+        {
+          Id: '1',
+          Name: 'VestAmount',
+          KeyType: 'address',
+          ValueType: 'uint256',
+          InitialKeys: ['0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'],
+          InitialValues: ['1000000000000000000'],
+        },
+        {
+          Id: '2',
+          Name: 'VestStart',
+          KeyType: 'address',
+          ValueType: 'uint256',
+          InitialKeys: [],
+          InitialValues: [],
+        },
+      ],
+      Trackers: [],
+      Rules: [
+        {
+          Name: 'Enforce Vesting Cliff',
+          Description: 'Ensure 12-month cliff has passed',
+          Condition:
+            '(GV:BLOCK_TIMESTAMP - TR:VestStart(GV:MSG_SENDER) > 31536000) AND (senderBalance - value) > ((TR:VestStart(GV:MSG_SENDER) / 126144000) * ((TR:VestStart(GV:MSG_SENDER) + 126144000) - GV:BLOCK_TIMESTAMP))',
+          PositiveEffects: [],
+          NegativeEffects: ['revert("Still in cliff period")'],
+          CallingFunction: 'Transfer',
+        },
+        {
+          Name: 'Enforce Vesting Cliff TransferFrom',
+          Description: 'Ensure 12-month cliff has passed',
+          Condition:
+            '(GV:BLOCK_TIMESTAMP - TR:VestStart(from) > 31536000) AND (senderBalance - value) > ((TR:VestStart(from) / 126144000) * ((TR:VestStart(from) + 126144000) - GV:BLOCK_TIMESTAMP))',
+          PositiveEffects: [],
+          NegativeEffects: ['revert("Still in cliff period")'],
+          CallingFunction: 'TransferFrom',
+        },
+      ],
+    }
+    await updatePolicy(policyId, JSON.stringify(trackerJson))
     // const callingContractAddress = getAddress(process.argv[4])
     // await applyPolicy(policyId, callingContractAddress)
   } else {
