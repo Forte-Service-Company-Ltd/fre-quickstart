@@ -1,0 +1,53 @@
+{
+  "Policy": "Vesting Schedule",
+  "Description": "4-year vesting schedule with 12-month cliff and monthly distribution",
+  "PolicyType": "open",
+  "CallingFunctions": [
+    {
+      "Name": "Transfer",
+      "FunctionSignature": "transfer(address to, uint256 value)",
+      "EncodedValues": "address to, uint256 value, uint256 senderBalance"
+    },
+    {
+      "Name": "TransferFrom",
+      "FunctionSignature": "transferFrom(address from, address to, uint256 value)",
+      "EncodedValues": "address from, address to, uint256 value, uint256 senderBalance"
+    }
+  ],
+  "ForeignCalls": [],
+  "MappedTrackers": [
+    {
+      "Name": "VestAmount",
+      "KeyType": "address",
+      "ValueType": "uint256",
+      "InitialKeys": [],
+      "InitialValues": []
+    },
+    {
+      "Name": "VestStart",
+      "KeyType": "address",
+      "ValueType": "uint256",
+      "InitialKeys": [],
+      "InitialValues": []
+    }
+  ],
+  "Trackers": [],
+  "Rules": [
+    {
+      "Name": "Enforce Vesting Cliff",
+      "Description": "Ensure 12-month cliff has passed",
+      "Condition": "(GV:BLOCK_TIMESTAMP - TR:VestStart(GV:MSG_SENDER) > 31536000) AND (senderBalance - value) > ((TR:VestStart(GV:MSG_SENDER) / 126144000) * ((TR:VestStart(GV:MSG_SENDER) + 126144000) - GV:BLOCK_TIMESTAMP))",
+      "PositiveEffects": [],
+      "NegativeEffects": ["revert(\"Still in cliff period\")"],
+      "CallingFunction": "Transfer"
+    },
+    {
+      "Name": "Enforce Vesting Cliff TransferFrom",
+      "Description": "Ensure 12-month cliff has passed",
+      "Condition": "(GV:BLOCK_TIMESTAMP - TR:VestStart(from) > 31536000) AND (senderBalance - value) > ((TR:VestStart(from) / 126144000) * ((TR:VestStart(from) + 126144000) - GV:BLOCK_TIMESTAMP))",
+      "PositiveEffects": [],
+      "NegativeEffects": ["revert(\"Still in cliff period\")"],
+      "CallingFunction": "TransferFrom"
+    }
+  ]
+}
