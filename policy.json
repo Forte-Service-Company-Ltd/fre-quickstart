@@ -1,25 +1,75 @@
 {
-  "Policy": "Test Policy",
-  "Description": "This policy is designed to test the transfer function with a value greater than 10000.",
-  "PolicyType": "open",
+  "Policy": "FORTE TOKEN POLICY",
+   "Description": "This policy is designed for the FORTE Token",
+   "PolicyType": "closed",
   "CallingFunctions": [
     {
-      "name": "transfer(address to, uint256 value)",
-      "functionSignature": "transfer(address to, uint256 value)",
-      "encodedValues": "address to, uint256 value"
+      "Name": "transfer",
+      "FunctionSignature": "transfer(address,uint256)",
+      "EncodedValues": "address to, uint256 value, address senderX"
+    },
+    {
+      "Name": "transferFrom",
+      "FunctionSignature": "transferFrom(address, address, uint256)",
+      "EncodedValues": "address to, address senderX, uint256 value"
     }
   ],
-  "ForeignCalls": [],
+  "ForeignCalls": [
+    {
+       "Name": "isKYCd_to",
+       "Address": "0x0941fbc0f190319f971e6a3751a63803390920a6",
+       "Function": "isAllowed(address)",
+       "ReturnType": "bool",
+       "ValuesToPass": "to",
+       "MappedTrackerKeyValues": "",
+       "CallingFunction": "transfer"
+     },
+     {
+       "Name": "isKYCd_from",
+       "Address": "0x0941fbc0f190319f971e6a3751a63803390920a6",
+       "Function": "isAllowed(address)",
+       "ReturnType": "bool",
+       "ValuesToPass": "senderX",
+       "MappedTrackerKeyValues": "",
+       "CallingFunction": "transfer"
+     },
+     {
+       "Name": "isKYCd_to2",
+       "Address": "0x0941fbc0f190319f971e6a3751a63803390920a6",
+       "Function": "isAllowed(address)",
+       "ReturnType": "bool",
+       "ValuesToPass": "to",
+       "MappedTrackerKeyValues": "",
+       "CallingFunction": "transferFrom"
+     },
+     {
+       "Name": "isKYCd_from2",
+       "Address": "0x0941fbc0f190319f971e6a3751a63803390920a6",
+       "Function": "isAllowed(address)",
+       "ReturnType": "bool",
+       "ValuesToPass": "senderX",
+       "MappedTrackerKeyValues": "",
+       "CallingFunction": "transferFrom"
+     }
+  ],
   "Trackers": [],
-  "MappedTrackers": [],
+  "MappedTrackers": [
+    {
+       "Name": "addrTracker",
+       "KeyType": "address",
+       "ValueType": "string",
+       "InitialKeys": ["0xb582cbF838316B41b690f301CafEEC86308cC2FB","0xb1bc4b481d1f414d9e413c1270d2ac6b5144460a","0xc487c3c46e3f0c1ff995cde36d58c451bc31e30b","0xdaad83edb154dd74ab49b5b5e9fa65b0f5a4bff6","0x8660eb3f0d90b77aa9a0a13b0fc54e7a82cab44c","0x49c91aefed25e3c5ead4df2f6a4c0645db4f9cf9"],
+       "InitialValues": ["T","T","STK","E","M","S"]
+     }
+  ],
   "Rules": [
     {
       "Name": "TransferRule",
-      "Description": "Rule to check if the transfer value is greater than 10000.",
-      "condition": "value > 10000",
-      "positiveEffects": ["emit \"TransferSuccessful\""],
-      "negativeEffects": ["revert(\"Transfer Failed\")"],
-      "callingFunction": "transfer(address to, uint256 value)"
+      "Description": "Forte Transfer Rule",
+      "Condition": "((((TR:addrTracker(senderX) == \"T\" OR TR:addrTracker(to) == \"T\") OR (TR:addrTracker(senderX) == \"STK\" AND (FC:isKYCd_to == true AND (TR:addrTracker(to) == \"S\" OR TR:addrTracker(to) == \"E\")))) OR (TR:addrTracker(senderX) == \"M\" AND (TR:addrTracker(to) == \"S\" OR TR:addrTracker(to) == \"E\"))) OR (TR:addrTracker(senderX) == \"E\" AND ((TR:addrTracker(to) == \"E\" OR TR:addrTracker(to) == \"M\") OR TR:addrTracker(to) == \"S\"))) OR (FC:isKYCd_from == true AND (TR:addrTracker(to) == \"STK\" AND ((TR:addrTracker(senderX) == \"S\" OR TR:addrTracker(senderX) == \"E\") OR TR:addrTracker(senderX) == \"M\")))",
+      "PositiveEffects": [],
+      "NegativeEffects": ["revert(\"Transfer Not Authorized\")"],
+      "CallingFunction": "transfer"
     }
   ]
 }
