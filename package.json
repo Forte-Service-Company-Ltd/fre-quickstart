@@ -17,7 +17,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@fortefoundation/forte-rules-engine": "^0.9.0",
-    "@fortefoundation/forte-rules-engine-sdk": "^0.20.0",
+    "@fortefoundation/forte-rules-engine-sdk": "^0.20.4",
     "@wagmi/core": "^2.17.3",
     "dotenv": "^16.5.0",
     "viem": "^2.33.3"
