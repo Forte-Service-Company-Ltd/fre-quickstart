@@ -10,7 +10,7 @@
     {
       "Name": "TransferFromRule",
       "Description": "Forte TransferFrom Rule",
-      "Condition": "((((TR:addrTracker(senderX) == \"T\" OR TR:addrTracker(to) == \"T\") OR (TR:addrTracker(senderX) == \"STK\" AND (FC:isKYCd_to2 == true AND (TR:addrTracker(to) == \"S\" OR TR:addrTracker(to) == \"E\")))) OR (TR:addrTracker(senderX) == \"M\" AND (TR:addrTracker(to) == \"S\" OR TR:addrTracker(to) == \"E\"))) OR (TR:addrTracker(senderX) == \"E\" AND ((TR:addrTracker(to) == \"E\" OR TR:addrTracker(to) == \"M\") OR TR:addrTracker(to) == \"S\"))) OR (FC:isKYCd_from2 == true AND (TR:addrTracker(to) == \"STK\" AND ((TR:addrTracker(senderX) == \"S\" OR TR:addrTracker(senderX) == \"E\") OR TR:addrTracker(senderX) == \"M\")))",
+      "Condition": "((((TR:addrTracker(senderX) == \"E\" AND TR:addrTrackerX(to) == true) OR (TR:addrTracker(senderX) == \"M\" AND (TR:addrTracker(to) == \"S\" OR TR:addrTracker(to) == \"E\"))) OR (TR:addrTracker(senderX) == \"T\" OR TR:addrTracker(to) == \"T\")) OR (TR:addrTracker(senderX) == \"STK\" AND (TR:addrTrackerX(to) == true AND FC:isKYCd_to2 == true))) OR (TR:addrTracker(to) == \"STK\" AND (TR:addrTrackerX(senderX) == true AND FC:isKYCd_from2 == true))",
       "PositiveEffects": [],
       "NegativeEffects": ["revert(\"Transfer Not Authorized\")"],
       "CallingFunction": "transferFrom"

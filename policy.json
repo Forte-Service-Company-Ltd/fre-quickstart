@@ -17,7 +17,7 @@
   "ForeignCalls": [
     {
        "Name": "isKYCd_to",
-       "Address": "0x0941fbc0f190319f971e6a3751a63803390920a6",
+       "Address": "0x43dDC06Dda7AE5102B405a410502faFE55CcA85D",
        "Function": "isAllowed(address)",
        "ReturnType": "bool",
        "ValuesToPass": "to",
@@ -26,7 +26,7 @@
      },
      {
        "Name": "isKYCd_from",
-       "Address": "0x0941fbc0f190319f971e6a3751a63803390920a6",
+       "Address": "0x43dDC06Dda7AE5102B405a410502faFE55CcA85D",
        "Function": "isAllowed(address)",
        "ReturnType": "bool",
        "ValuesToPass": "senderX",
@@ -35,7 +35,7 @@
      },
      {
        "Name": "isKYCd_to2",
-       "Address": "0x0941fbc0f190319f971e6a3751a63803390920a6",
+       "Address": "0x43dDC06Dda7AE5102B405a410502faFE55CcA85D",
        "Function": "isAllowed(address)",
        "ReturnType": "bool",
        "ValuesToPass": "to",
@@ -44,7 +44,7 @@
      },
      {
        "Name": "isKYCd_from2",
-       "Address": "0x0941fbc0f190319f971e6a3751a63803390920a6",
+       "Address": "0x43dDC06Dda7AE5102B405a410502faFE55CcA85D",
        "Function": "isAllowed(address)",
        "ReturnType": "bool",
        "ValuesToPass": "senderX",
@@ -58,15 +58,22 @@
        "Name": "addrTracker",
        "KeyType": "address",
        "ValueType": "string",
-       "InitialKeys": ["0xb582cbF838316B41b690f301CafEEC86308cC2FB","0xb1bc4b481d1f414d9e413c1270d2ac6b5144460a","0xc487c3c46e3f0c1ff995cde36d58c451bc31e30b","0xdaad83edb154dd74ab49b5b5e9fa65b0f5a4bff6","0x8660eb3f0d90b77aa9a0a13b0fc54e7a82cab44c","0x49c91aefed25e3c5ead4df2f6a4c0645db4f9cf9"],
-       "InitialValues": ["T","T","STK","E","M","S"]
+       "InitialKeys": ["0x33b12e3c8a71340C5e834836ec9b48a81be62F86"],
+       "InitialValues": ["STK"]
+     },
+     {
+       "Name": "addrTrackerX",
+       "KeyType": "address",
+       "ValueType": "bool",
+       "InitialKeys": [],
+       "InitialValues": []       
      }
   ],
   "Rules": [
     {
       "Name": "TransferRule",
       "Description": "Forte Transfer Rule",
-      "Condition": "((((TR:addrTracker(senderX) == \"T\" OR TR:addrTracker(to) == \"T\") OR (TR:addrTracker(senderX) == \"STK\" AND (FC:isKYCd_to == true AND (TR:addrTracker(to) == \"S\" OR TR:addrTracker(to) == \"E\")))) OR (TR:addrTracker(senderX) == \"M\" AND (TR:addrTracker(to) == \"S\" OR TR:addrTracker(to) == \"E\"))) OR (TR:addrTracker(senderX) == \"E\" AND ((TR:addrTracker(to) == \"E\" OR TR:addrTracker(to) == \"M\") OR TR:addrTracker(to) == \"S\"))) OR (FC:isKYCd_from == true AND (TR:addrTracker(to) == \"STK\" AND ((TR:addrTracker(senderX) == \"S\" OR TR:addrTracker(senderX) == \"E\") OR TR:addrTracker(senderX) == \"M\")))",
+      "Condition": "((((TR:addrTracker(senderX) == \"E\" AND TR:addrTrackerX(to) == true) OR (TR:addrTracker(senderX) == \"M\" AND (TR:addrTracker(to) == \"S\" OR TR:addrTracker(to) == \"E\"))) OR (TR:addrTracker(senderX) == \"T\" OR TR:addrTracker(to) == \"T\")) OR (TR:addrTracker(senderX) == \"STK\" AND (TR:addrTrackerX(to) == true AND FC:isKYCd_to == true))) OR (TR:addrTracker(to) == \"STK\" AND (TR:addrTrackerX(senderX) == true AND FC:isKYCd_from == true))",
       "PositiveEffects": [],
       "NegativeEffects": ["revert(\"Transfer Not Authorized\")"],
       "CallingFunction": "transfer"
